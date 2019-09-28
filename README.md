@@ -2,12 +2,11 @@
 
 Smgo!是一个基于Golang的SM.MS图床第三方SDK工具，方便土拨鼠们在写博客的时候能够快速得到图片的图床连接，加快文档编写速度.
 
-# Usage
-### install安装
+# Install
 ```
 git clone https://github.com/miRemid/smgo.git 到你的GOPATH中
 ```
-### First Try初步使用
+# Usage
 ```golang
 package main
 import "fmt"
