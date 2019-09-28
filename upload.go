@@ -12,7 +12,7 @@ import (
 )
 
 // newFileUploadRequest 生成请求
-func (sm *SmClient) newFileUploadRequest(url, path string) (*http.Request, error) {
+func (sm *SmClient) newFileRequest(url, path string) (*http.Request, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -32,6 +32,9 @@ func (sm *SmClient) newFileUploadRequest(url, path string) (*http.Request, error
 	}
 	req, err := http.NewRequest("POST", url, body)
 	req.Header.Add("Content-Type", writer.FormDataContentType())
+	if sm.CheckLogin(){
+		req.Header.Add("Authorization", sm.Token)
+	}
 	return req, err
 }
 
@@ -39,7 +42,7 @@ func (sm *SmClient) newFileUploadRequest(url, path string) (*http.Request, error
 func (sm *SmClient) Upload(filePath string) (models.Image, error) {
 	var img models.Image
 	// 1. 构造请求
-	req, err := sm.newFileUploadRequest(UploadURL, filePath)
+	req, err := sm.newFileRequest(UploadURL, filePath)
 	if err != nil{
 		return img, nil
 	}
@@ -57,36 +60,15 @@ func (sm *SmClient) Upload(filePath string) (models.Image, error) {
 	return img, nil
 }
 
-// newFileTokenReq 生成带token请求
-func (sm *SmTokenClient) newFileTokenReq(url, path string) (*http.Request, error) {
-	req, err := sm.newFileUploadRequest(url, path)
-	if err != nil {
-		return nil, err
+// Uploads 批量上传
+func (sm *SmClient) Uploads(filePath ...string) ([]models.Image, error) {
+	var imgs []models.Image
+	for _, path := range filePath{
+		if img, err := sm.Upload(path); err != nil {
+			return imgs, err
+		}else{
+			imgs = append(imgs, img)
+		}
 	}
-	if err = sm.CheckLogin(); err != nil{
-		return nil, err
-	}
-	req.Header.Add("Authorization", sm.Token)
-	return req, nil	
-}
-// Upload 上传图片
-func (sm *SmTokenClient) Upload(filePath string) (models.Image, error) {
-	var img models.Image
-	// 1. 构造请求
-	req, err := sm.newFileTokenReq(UploadURL, filePath)
-	if err != nil{
-		return img, nil
-	}
-	// 3. 发送请求
-	res, err := sm.HTTPClient.Do(req)
-	if err != nil {
-		return img, nil
-	}
-	defer res.Body.Close()
-	// 4. 解析数据
-	err = json.NewDecoder(res.Body).Decode(&img)	
-	if err != nil {
-		return img, err
-	}	
-	return img, nil
+	return imgs, nil
 }

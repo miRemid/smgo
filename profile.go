@@ -1,6 +1,7 @@
 package smgo
 
 import (	
+	"errors"
 	"net/http"
 	"encoding/json"
 
@@ -8,12 +9,11 @@ import (
 )
 
 // Profile 获取用户个人信息
-func (sm *SmTokenClient) Profile() (models.Profile, error) {
+func (sm *SmClient) Profile() (models.Profile, error) {
 	var profile models.Profile
-	// 检查登陆状态
-	if err := sm.CheckLogin(); err != nil{
-		return profile, err
-	}	
+	if !sm.CheckLogin() {
+		return profile, errors.New("need login")
+	}
 	// 1. 构造请求
 	req, err := http.NewRequest("POST", ProfileURL, nil)
 	if err != nil {

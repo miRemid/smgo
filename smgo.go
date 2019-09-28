@@ -2,7 +2,6 @@ package smgo
 
 import (
 	"net/http"
-	"errors"
 	"time"
 	"fmt"
 )
@@ -29,15 +28,7 @@ const (
 // SmClient 默认客户端
 type SmClient struct {
 	HTTPClient 	http.Client
-}
-
-// SmTokenClient 主程序
-type SmTokenClient struct {
-	SmClient
-	UserName	string
-	Password	string
-	Token		string
-	login		bool
+	Token	string
 }
 
 // NewSmClient 创建一个新的SmClient
@@ -45,25 +36,14 @@ func NewSmClient() SmClient {
 	return SmClient{}
 }
 
-// NewSmClientWithToken 创建一个登陆Client
-func NewSmClientWithToken(username, password string) SmTokenClient {
-	sm := SmTokenClient{
-		UserName: 	username,
-		Password: 	password,
-	}
-	sm.HTTPClient.Timeout = time.Second * 10
-	if token, err := sm.Login(); err != nil{
-		fmt.Println(err)
-	}else{
-		fmt.Printf("Login Success, Token = %s\n", token.Data.Token)
-	}
-	return sm
+// SetTimeout 设置超时
+func (sm *SmClient) SetTimeout(timeout time.Duration){
+	sm.HTTPClient.Timeout = timeout
 }
 
 // CheckLogin 检查登陆
-func (sm *SmTokenClient) CheckLogin() error {
-	if !sm.login {
-		return	errors.New("Need Login")
-	}
-	return nil
+func (sm *SmClient) CheckLogin() bool {	
+	res := sm.Token != ""
+	fmt.Printf("Login: %v\n", res)
+	return res
 }
