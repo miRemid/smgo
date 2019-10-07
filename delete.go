@@ -3,6 +3,7 @@ package smgo
 import (
 	"net/http"
 	"encoding/json"
+	"io/ioutil"
 
 	"github.com/miRemid/smgo/models"
 )
@@ -11,10 +12,10 @@ import (
 func (sm *SmClient) Delete(hash string) (models.BaseResponse, error) {
 	var response models.BaseResponse
 	// 1. 构造url
-	url := DeleteURL + "?hash=" + hash
+	url := DeleteURL + hash
 	// 2. 构造请求
 	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {		
+	if err != nil {
 		return response, err
 	}
 	// 添加header
@@ -25,8 +26,9 @@ func (sm *SmClient) Delete(hash string) (models.BaseResponse, error) {
 		return response, err
 	}
 	defer res.Body.Close()
+	data, _ := ioutil.ReadAll(res.Body)
 	// 4. 格式化结果
-	err = json.NewDecoder(res.Body).Decode(&response)
+	err = json.Unmarshal(data, &response)
 	if err != nil {
 		return response, err
 	}
