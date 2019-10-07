@@ -12,16 +12,10 @@ import (
 )
 
 // newFileUploadRequest 生成请求
-func (sm *SmClient) newFileRequest(url, path string) (*http.Request, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
+func (sm *SmClient) newFileRequest(url, filename string, file io.Reader) (*http.Request, error) {
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	part, err := writer.CreateFormFile("smfile", path)
+	part, err := writer.CreateFormFile("smfile", filename)
 	if err != nil {
 		return nil, err
 	}
@@ -41,8 +35,36 @@ func (sm *SmClient) newFileRequest(url, path string) (*http.Request, error) {
 // Upload 上传图片
 func (sm *SmClient) Upload(filePath string) (models.Image, error) {
 	var img models.Image
+	file, err := os.Open(filePath)
+	if err != nil {
+		return img, err
+	}
+	defer file.Close()
+	// // 1. 构造请求
+	// req, err := sm.newFileRequest(UploadURL, filePath, file)
+	// if err != nil{
+	// 	return img, nil
+	// }
+	// // 3. 发送请求
+	// res, err := sm.HTTPClient.Do(req)
+	// if err != nil {
+	// 	return img, nil
+	// }
+	// defer res.Body.Close()
+	// // 4. 解析数据
+	// err = json.NewDecoder(res.Body).Decode(&img)	
+	// if err != nil {
+	// 	return img, err
+	// }	
+	// return img, nil
+	return sm.UploadStream(file, filePath)
+}
+
+// UploadStream 上传文件流
+func (sm *SmClient) UploadStream(file io.Reader, filename string) (models.Image, error){
+	var img models.Image
 	// 1. 构造请求
-	req, err := sm.newFileRequest(UploadURL, filePath)
+	req, err := sm.newFileRequest(UploadURL, filename, file)
 	if err != nil{
 		return img, nil
 	}
