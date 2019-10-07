@@ -32,8 +32,8 @@ type SmClient struct {
 }
 
 // NewSmClient 创建一个新的SmClient
-func NewSmClient() SmClient {
-	return SmClient{}
+func NewSmClient() *SmClient {
+	return &SmClient{}
 }
 
 // SetTimeout 设置超时
