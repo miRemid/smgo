@@ -39,24 +39,7 @@ func (sm *SmClient) Upload(filePath string) (models.Image, error) {
 	if err != nil {
 		return img, err
 	}
-	defer file.Close()
-	// // 1. 构造请求
-	// req, err := sm.newFileRequest(UploadURL, filePath, file)
-	// if err != nil{
-	// 	return img, nil
-	// }
-	// // 3. 发送请求
-	// res, err := sm.HTTPClient.Do(req)
-	// if err != nil {
-	// 	return img, nil
-	// }
-	// defer res.Body.Close()
-	// // 4. 解析数据
-	// err = json.NewDecoder(res.Body).Decode(&img)	
-	// if err != nil {
-	// 	return img, err
-	// }	
-	// return img, nil
+	defer file.Close()	
 	return sm.UploadStream(file, filePath)
 }
 
@@ -86,11 +69,11 @@ func (sm *SmClient) UploadStream(file io.Reader, filename string) (models.Image,
 func (sm *SmClient) Uploads(filePath ...string) ([]models.Image, error) {
 	var imgs []models.Image
 	for _, path := range filePath{
-		if img, err := sm.Upload(path); err != nil {
+		img, err := sm.Upload(path)
+		if err != nil {
 			return imgs, err
-		}else{
-			imgs = append(imgs, img)
 		}
+		imgs = append(imgs, img)
 	}
 	return imgs, nil
 }
