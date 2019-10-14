@@ -15,6 +15,9 @@ func (sm *SmClient) Clear() (models.BaseResponse, error) {
 	if err != nil {		
 		return response, err
 	}
+	if sm.CheckLogin() {
+		req.Header.Add("Authorization", sm.Token)
+	}
 	// 添加header
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	// 3. 发送请求
