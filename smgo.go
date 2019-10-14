@@ -3,7 +3,6 @@ package smgo
 import (
 	"net/http"
 	"time"
-	"fmt"
 )
 
 const (
@@ -41,9 +40,13 @@ func (sm *SmClient) SetTimeout(timeout time.Duration){
 	sm.HTTPClient.Timeout = timeout
 }
 
+// SetToken 设置token
+func (sm *SmClient) SetToken(token string) {
+	sm.Token = token
+}
+
 // CheckLogin 检查登陆
 func (sm *SmClient) CheckLogin() bool {	
 	res := sm.Token != ""
-	fmt.Printf("Login: %v\n", res)
 	return res
 }
