@@ -1,11 +1,11 @@
 package smgo
 
-import (	
+import (
+	"encoding/json"
 	"errors"
 	"net/http"
-	"encoding/json"
 
-	"github.com/miRemid/smgo/models"
+	"smgo/models"
 )
 
 // Profile 获取用户个人信息
@@ -29,9 +29,9 @@ func (sm *SmClient) Profile() (models.Profile, error) {
 	}
 	defer res.Body.Close()
 	// 3. 过滤结果
-	err = json.NewDecoder(res.Body).Decode(&profile)	
+	err = json.NewDecoder(res.Body).Decode(&profile)
 	if err != nil {
 		return profile, err
-	}	
+	}
 	return profile, nil
 }

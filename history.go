@@ -1,10 +1,10 @@
 package smgo
 
 import (
+	"encoding/json"
 	"net/http"
-	"encoding/json"	
 
-	"github.com/miRemid/smgo/models"
+	"smgo/models"
 )
 
 // History 获取上传历史
@@ -25,7 +25,7 @@ func (sm *SmClient) History() (models.Images, error) {
 	}
 	defer res.Body.Close()
 	// 解析
-	err = json.NewDecoder(res.Body).Decode(&imgs)	
+	err = json.NewDecoder(res.Body).Decode(&imgs)
 	if err != nil {
 		return imgs, err
 	}

@@ -1,10 +1,10 @@
 package smgo
 
 import (
-	"net/http"
 	"encoding/json"
+	"net/http"
 
-	"github.com/miRemid/smgo/models"
+	"smgo/models"
 )
 
 // Clear 清除上传历史
@@ -12,7 +12,7 @@ func (sm *SmClient) Clear() (models.BaseResponse, error) {
 	var response models.BaseResponse
 	// 2. 构造请求
 	req, err := http.NewRequest("GET", ClearURL, nil)
-	if err != nil {		
+	if err != nil {
 		return response, err
 	}
 	if sm.CheckLogin() {
@@ -22,7 +22,7 @@ func (sm *SmClient) Clear() (models.BaseResponse, error) {
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	// 3. 发送请求
 	res, err := sm.HTTPClient.Do(req)
-	if err != nil{
+	if err != nil {
 		return response, err
 	}
 	defer res.Body.Close()
