@@ -1,12 +1,126 @@
 # Smgo!
+Smgo!是一个基于Golang的SM.MS图床第三方Cli&SDK工具
 
-Smgo!是一个基于Golang的SM.MS图床第三方SDK工具
+# 安装
+```sh
+go get github.com/miRemid/smgo.git
+export PATH=$PATH:`你的GOPATH`/bin
+```
+# Cli 使用
+## 上传
+```shell
+$ smgo u -h
+NAME:
+   smgo upload - upload image to sm.ms
 
-# Install
+USAGE:
+   smgo upload [command options] [arguments...]
+
+OPTIONS:
+   --token value, -t value   set account token
+   --time value, --tm value  set timeout (default: 5)
+   --help, -h                show help (default: false)
+$ smgo u abc.jpg 
+{
+  "success": true,
+  "code": "success",
+  "message": "Upload success.",
+  "RequestId": "FE9A9889-FD9E-47FD-8E48-D8CF55B8883A",
+  "data": {
+    "delete": "https://sm.ms/delete/bPSMvGAk8rUK96ZjsfzYJiEa2T",
+    "file_id": 0,
+    "filename": "abc.jpg",
+    "hash": "bPSMvGAk8rUK96ZjsfzYJiEa2T",
+    "height": 1080,
+    "page": "https://sm.ms/image/Y2jn4T5PvFHxQlN",
+    "path": "/2020/03/12/Y2jn4T5PvFHxQlN.jpg",
+    "size": 336198,
+    "storename": "Y2jn4T5PvFHxQlN.jpg",
+    "url": "https://i.loli.net/2020/03/12/Y2jn4T5PvFHxQlN.jpg",
+    "width": 1920
+ }
+}
 ```
-git clone https://github.com/miRemid/smgo.git
+## 删除
+```shell
+$ smgo d -h                        
+NAME:
+   smgo delete - delete image from sm.ms
+
+USAGE:
+   smgo delete [command options] [arguments...]
+
+OPTIONS:
+   --token value, -t value   set account token
+   --time value, --tm value  set timeout (default: 5)
+   --help, -h                show help (default: false)
+$ smgo d bPSMvGAk8rUK96ZjsfzYJiEa2T
+{
+  "success": true,
+  "code": "success",
+  "message": "File delete success.",
+  "data": [],
+  "RequestId": "2589D55B-B432-4367-BA63-920435AA4D94"
+}
 ```
-# Usage
+## 查看个人信息
+```sh
+$ smgo p -h
+NAME:
+   smgo profile - print profile infomation
+
+USAGE:
+   smgo profile [command options] [arguments...]
+
+OPTIONS:
+   --token value, -t value   set account token
+   --time value, --tm value  set timeout (default: 5)
+   --help, -h                show help (default: false)
+$ smgo p -t 你的账号Token
+{
+  "success": true,
+  "code": "success",
+  "message": "Get user profile success.",
+  "RequestId": "16CC6A16-27FD-49E4-BCEB-A25740F837C0",
+  "data": {
+    "username": "hahaha",
+    "role": "user",
+    "group_expire": "0000-00-00",
+    "disk_usage": "4.09 MB",
+    "disk_limit": "5.00 GB"
+  }
+}
+```
+## 查看上传记录
+```sh
+$ smgo h -h                                 
+NAME:
+   smgo history - print upload history
+
+USAGE:
+   smgo history [command options] [arguments...]
+
+OPTIONS:
+   --token value, -t value   set account token
+   --time value, --tm value  set timeout (default: 5)
+   --help, -h                show help (default: false)
+```
+## 清除上传记录
+```sh
+$ smgo c -h                                 
+NAME:
+   smgo clear - print upload clear
+
+USAGE:
+   smgo clear [command options] [arguments...]
+
+OPTIONS:
+   --token value, -t value   set account token
+   --time value, --tm value  set timeout (default: 5)
+   --help, -h                show help (default: false)
+```
+
+# SDK Usage
 ```golang
 package main
 import "fmt"
