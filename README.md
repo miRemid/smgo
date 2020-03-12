@@ -4,9 +4,13 @@ Smgo!是一个基于Golang的SM.MS图床第三方Cli&SDK工具
 # 安装
 ```sh
 go get github.com/miRemid/smgo.git
-export PATH=$PATH:`你的GOPATH`/bin
 ```
 # Cli 使用
+```
+$ cd "下载的路径"/cmd/smgo
+$ go install
+$ export PATH=$PATH:"你的GOPATH"/bin
+```
 ## 上传
 ```shell
 $ smgo u -h
@@ -120,7 +124,7 @@ OPTIONS:
    --help, -h                show help (default: false)
 ```
 
-# SDK Usage
+# SDK 使用
 ```golang
 package main
 import "fmt"
@@ -136,8 +140,8 @@ func main(){
     sm.SetToken("token")
 
     // 查看上传历史
-	if res, err := sm.History(); err != nil {
-		fmt.Println(err)
+    if res, err := sm.History(); err != nil {
+    	fmt.Println(err)
 	}else {
 		for _, v := range res.Data{
 			fmt.Printf("Name:%s, URL:%s\n", v.FileName, v.URL)
